@@ -5,7 +5,7 @@ go-medium2markdown (re: medium to markdown) is simple tool to convert your mediu
 With Medium post url, we can add query param `format=json` to get json format of the post. Then, we parse the json to markdown text.
 
 *Example*
-|---|---|
+
 |Original Post|https://purnasatria.medium.com/medium-content-type-cce8b8bdd0bb|
 |JSON format|https://medium.com/@purnasatria/medium-content-type-cce8b8bdd0bb?format=json|
 
