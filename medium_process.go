@@ -1,6 +1,8 @@
 package main
 
-import "strings"
+import (
+	"strings"
+)
 
 type OrderListCounter int
 
@@ -18,8 +20,9 @@ func (p *MediumPost) process(cfg *Config, mr MediaResources) string {
 	}
 
 	if len(paras) > 0 {
-		for _, para := range paras {
-			var counter OrderListCounter
+		var counter OrderListCounter
+
+		for i, para := range paras {
 			splittedParagraph := strings.Split(para.Text, "")
 
 			for _, m := range para.Markups {
@@ -31,7 +34,11 @@ func (p *MediumPost) process(cfg *Config, mr MediaResources) string {
 			} else {
 				counter = 0
 			}
+			
 
+			processedText := para.process(cfg, splittedParagraph, counter, mr, mentionedUsers)
+			
+			processedParagraphs[i] =  processedParagraphs[i] + processedText  
 		}
 	}
 

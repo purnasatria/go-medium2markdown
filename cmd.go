@@ -3,8 +3,9 @@ package main
 import (
 	"errors"
 	"fmt"
-	"github.com/spf13/cobra"
 	"net/url"
+
+	"github.com/spf13/cobra"
 )
 
 var (
@@ -36,8 +37,6 @@ var cmd = &cobra.Command{
 			return err
 		}
 
-		fmt.Println(mediumUrl, cfg)
-
 		post, err := fetchMediumPost(mediumUrl)
 		if err != nil {
 			return err
@@ -48,7 +47,8 @@ var cmd = &cobra.Command{
 			return err
 		}
 
-		post.process(&cfg, media)
+		result := post.process(&cfg, media)
+		fmt.Println(result)
 
 		return nil
 	},
@@ -60,12 +60,12 @@ func init() {
 }
 
 func isValidMediumURL(input string) error {
-	u, err := url.Parse(input)
+	_, err := url.Parse(input)
 	if err != nil {
 		return err
 	}
 
-	qp := u.Query()
+	/* qp := u.Query()
 	format := qp.Get("format")
 	if format == "" {
 		return errors.New("url must contain query param 'format'")
@@ -73,7 +73,7 @@ func isValidMediumURL(input string) error {
 
 	if format != "json" {
 		return errors.New("format must be json")
-	}
+	} */
 
 	return nil
 }

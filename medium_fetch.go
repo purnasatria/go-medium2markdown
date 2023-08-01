@@ -13,9 +13,10 @@ import (
 )
 
 const splitParam = ";</x>"
+const queryParam = "?format=json"
 
 func fetchMediumPost(mediumUrl string) (MediumPost, error) {
-	resp, err := http.Get(mediumUrl)
+	resp, err := http.Get(mediumUrl+queryParam)
 	if err != nil {
 		return MediumPost{}, err
 	}
