@@ -41,24 +41,19 @@ There are 2 main object in JSON result, `paragraphs` and `markups`
 |3|Link or Mention|
 |10| Highlight/ In-line code|
 
-# How to install
-
-# How to use
+# How to use ?
 ```bash
 md2 <medium_url>
 ```
-
 Alternatively you can add yaml config file to set markup symbol (right now just for section and italic)
 ```bash
 md2 <medium_url> -c <config_file_path>
 ```
-
-
 # What can't be converted right now
 - Github Gist embed
 
 # Roadmap
-[] output to file 
-[] add Hugo Frontmatter
-[] download asset/images
+- [ ] output to file 
+- [ ] add Hugo Frontmatter
+- [ ] download asset/images
 
