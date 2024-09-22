@@ -9,15 +9,6 @@ import (
 func (p *Paragraph) process(cfg *Config, sp []string, counter OrderListCounter, mrs MediaResources, mus MentionedUsers) string {
 	mdText := strings.Join(sp, "")
 
-// func (p *Paragraph) process(cfg *Config, sp []string, counter OrderListCounter, mrs MediaResources, mus MentionedUsers) {
-	//if p.Type != EmbeddedLink {
-	//	for _, m := range p.Markups {
-	//		m.process(sp, mus)
-	//	}
-	//}
-	//
-	//mdText := strings.Join(sp, "")
-
 	switch p.Type {
 	case Basic:
 		return mdText
@@ -74,5 +65,4 @@ func (p *Paragraph) process(cfg *Config, sp []string, counter OrderListCounter, 
 		log.Printf("name: %s unkown paragraph type %d\n", p.Name, p.Type)
 		return mdText
 	}
-
 }

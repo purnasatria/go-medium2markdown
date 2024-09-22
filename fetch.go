@@ -12,11 +12,13 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-const splitParam = ";</x>"
-const queryParam = "?format=json"
+const (
+	splitParam = ";</x>"
+	queryParam = "?format=json"
+)
 
 func fetchMediumPost(mediumUrl string) (MediumPost, error) {
-	resp, err := http.Get(mediumUrl+queryParam)
+	resp, err := http.Get(mediumUrl + queryParam)
 	if err != nil {
 		return MediumPost{}, err
 	}
@@ -49,6 +51,8 @@ func toMediumPost(raw string) (MediumPost, error) {
 	return post, nil
 }
 
+// TODO: Potential issue if using split
+// Handle it later
 func cleanPostResponse(raw string) (string, error) {
 	res := strings.Split(raw, splitParam)
 	if len(res) != 2 {
@@ -57,24 +61,23 @@ func cleanPostResponse(raw string) (string, error) {
 	return res[1], nil
 }
 
+// Embedded content response is only mediaResourceId
+// so we need to fetch it manually from HTML
 func fetchMediaResource(url string) (MediaResources, error) {
-
-	// Make the HTTP GET request to the website
 	resp, err := http.Get(url)
 	if err != nil {
-		log.Println("Error making request: %v", err)
+		log.Printf("Error making request: %v", err)
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	// Parse the HTML response using goquery
 	doc, err := goquery.NewDocumentFromReader(resp.Body)
 	if err != nil {
-		log.Println("Error parsing HTML: %v", err)
+		log.Printf("Error parsing HTML: %v", err)
 		return nil, err
 	}
 
-	// Find the script tags and extract the one containing the desired JS variable
+	// Find the script tags and extract the one containing appolo state
 	var scriptContent string
 	doc.Find("script").Each(func(i int, s *goquery.Selection) {
 		content := s.Text()
@@ -95,7 +98,6 @@ func fetchMediaResource(url string) (MediaResources, error) {
 		return nil, errors.New("failed to find the 'MediaResource' object")
 	}
 
-	// Parse the JSON into a map of string to MediaResource
 	var mrs map[string]MediaResource
 	for _, mr := range matches {
 		err = json.Unmarshal([]byte("{"+mr+"}"), &mrs)
@@ -104,5 +106,6 @@ func fetchMediaResource(url string) (MediaResources, error) {
 			return nil, err
 		}
 	}
+	log.Println(mrs)
 	return mrs, nil
 }

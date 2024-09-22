@@ -34,11 +34,10 @@ func (p *MediumPost) process(cfg *Config, mr MediaResources) string {
 			} else {
 				counter = 0
 			}
-			
 
 			processedText := para.process(cfg, splittedParagraph, counter, mr, mentionedUsers)
-			
-			processedParagraphs[i] =  processedParagraphs[i] + processedText  
+
+			processedParagraphs[i] = processedParagraphs[i] + processedText
 		}
 	}
 

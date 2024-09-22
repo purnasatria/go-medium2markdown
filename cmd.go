@@ -24,16 +24,13 @@ var cmd = &cobra.Command{
 			return errors.New("please input Medium url")
 		}
 
-		//load default config
 		cfg := getDefaultConfig()
-
-		// load config from file
 		if cfgFile != "" {
 			readConfigFromFile(cfgFile, &cfg)
 		}
 
 		mediumUrl = args[0]
-		if err := isValidMediumURL(mediumUrl); err != nil {
+		if err := isValidURL(mediumUrl); err != nil {
 			return err
 		}
 
@@ -59,21 +56,10 @@ func init() {
 	cmd.Flags().StringVarP(&outputFile, "outputFile", "o", "", "Output File")
 }
 
-func isValidMediumURL(input string) error {
+func isValidURL(input string) error {
 	_, err := url.Parse(input)
 	if err != nil {
 		return err
 	}
-
-	/* qp := u.Query()
-	format := qp.Get("format")
-	if format == "" {
-		return errors.New("url must contain query param 'format'")
-	}
-
-	if format != "json" {
-		return errors.New("format must be json")
-	} */
-
 	return nil
 }

@@ -1,3 +1,7 @@
 markupSymbol:
   italic: "_"
   section: "___"
+
+isFrontMatter: false
+isDownloadAsset: false
+

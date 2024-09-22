@@ -1,9 +1,10 @@
 package main
 
 import (
-	"gopkg.in/yaml.v3"
 	"log"
 	"os"
+
+	"gopkg.in/yaml.v3"
 )
 
 type MarkupSymbol struct {
@@ -17,7 +18,7 @@ type Config struct {
 	IsDownloadAssets bool         `yaml:"isDownloadAssets"`
 }
 
-/* How to load the configuration, the highest priority loaded last
+/* Load the configuration, the highest priority loaded last
  * First: Initialise to default config
  * Second: Replace with environment variables
  * Third: Replace with configuration file
