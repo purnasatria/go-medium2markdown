@@ -1,4 +1,4 @@
-package main
+package core
 
 import (
 	"log"
@@ -12,20 +12,20 @@ type MarkupSymbol struct {
 	Section string `yaml:"section"`
 }
 
-type Config struct {
+type MediumConverterOptions struct {
 	MarkupSymbol     MarkupSymbol `yaml:"markupSymbol"`
 	IsFrontMatter    bool         `yaml:"isFrontMatter"`
 	IsDownloadAssets bool         `yaml:"isDownloadAssets"`
 }
 
-/* Load the configuration, the highest priority loaded last
- * First: Initialise to default config
- * Second: Replace with environment variables
- * Third: Replace with configuration file
- */
-func getDefaultConfig() Config {
+func NewMediumConverterOption() *MediumConverterOptions {
+	opt := getDefaultOption()
+	return &opt
+}
+
+func getDefaultOption() MediumConverterOptions {
 	// set default config
-	conf := Config{
+	conf := MediumConverterOptions{
 		MarkupSymbol{
 			Italic:  "*",
 			Section: "***",
@@ -37,7 +37,7 @@ func getDefaultConfig() Config {
 	return conf
 }
 
-func readConfigFromFile(filePath string, config *Config) {
+func readConfigFromFile(filePath string, config *MediumConverterOptions) {
 	yamlFile, err := os.ReadFile(filePath)
 	if err != nil {
 		log.Fatalf("Error reading YAML file: %v", err)

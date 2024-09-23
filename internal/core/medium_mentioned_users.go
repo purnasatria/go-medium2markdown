@@ -1,4 +1,4 @@
-package main
+package core
 
 func (mu MentionedUsers) getUserData(id string) MentionedUser {
 	for _, u := range mu {

@@ -1,16 +1,16 @@
-package main
+package core
 
 import (
 	"fmt"
 	"log"
 )
 
-func (m *Markup) process(cfg *Config, splittedParagraph []string, mus MentionedUsers) {
+func (m *Markup) Parse(opt *MediumConverterOptions, splittedParagraph []string, mus MentionedUsers) {
 	switch m.Type {
 	case Bold:
 		m.addMarkup(splittedParagraph, "**", "**")
 	case Italic:
-		m.addMarkup(splittedParagraph, cfg.MarkupSymbol.Italic, cfg.MarkupSymbol.Italic)
+		m.addMarkup(splittedParagraph, opt.MarkupSymbol.Italic, opt.MarkupSymbol.Italic)
 	case LinkOrMention:
 		if m.UserId == "" {
 			m.addMarkup(splittedParagraph, "[", fmt.Sprintf("](%s)", m.Href))

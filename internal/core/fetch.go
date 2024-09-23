@@ -1,4 +1,4 @@
-package main
+package core
 
 import (
 	"encoding/json"
@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	splitParam = ";</x>"
+	prefix     = "])}while(1);</x>"
 	queryParam = "?format=json"
 )
 
@@ -38,7 +38,7 @@ func fetchMediumPost(mediumUrl string) (MediumPost, error) {
 
 func toMediumPost(raw string) (MediumPost, error) {
 	var post MediumPost
-	jsonStr, err := cleanPostResponse(raw)
+	jsonStr, err := cleanResponse(raw)
 	if err != nil {
 		return post, err
 	}
@@ -51,18 +51,18 @@ func toMediumPost(raw string) (MediumPost, error) {
 	return post, nil
 }
 
-// TODO: Potential issue if using split
-// Handle it later
-func cleanPostResponse(raw string) (string, error) {
-	res := strings.Split(raw, splitParam)
-	if len(res) != 2 {
-		return "", errors.New("invalid Medium response")
+func cleanResponse(raw string) (string, error) {
+	if len(raw) >= len(prefix) && raw[0:len(prefix)] == prefix {
+		return raw[len(prefix):], nil
 	}
-	return res[1], nil
+
+	return "", errors.New("invalid Medium response")
 }
 
-// Embedded content response is only mediaResourceId
-// so we need to fetch it manually from HTML
+/*
+* Embedded content response is only mediaResourceId
+* so we need to fetch it manually from HTML
+ */
 func fetchMediaResource(url string) (MediaResources, error) {
 	resp, err := http.Get(url)
 	if err != nil {

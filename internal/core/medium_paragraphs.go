@@ -1,4 +1,4 @@
-package main
+package core
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func (p *Paragraph) process(cfg *Config, sp []string, counter OrderListCounter, mrs MediaResources, mus MentionedUsers) string {
+func (p *Paragraph) Parse(opt *MediumConverterOptions, sp []string, counter OrderListCounter, mrs MediaResources, mus MentionedUsers) string {
 	mdText := strings.Join(sp, "")
 
 	switch p.Type {
@@ -30,10 +30,10 @@ func (p *Paragraph) process(cfg *Config, sp []string, counter OrderListCounter, 
 		imageAlt := p.Metadata.Alt
 
 		if p.Text != "" {
-			caption = fmt.Sprintf("%s%s%s", cfg.MarkupSymbol.Italic, mdText, cfg.MarkupSymbol.Italic)
+			caption = fmt.Sprintf("%s%s%s", opt.MarkupSymbol.Italic, mdText, opt.MarkupSymbol.Italic)
 		}
 
-		return fmt.Sprintf("![%s](%s)%s", imageAlt, imageURL, br+br) + caption + br
+		return fmt.Sprintf("![%s](%s)%s", imageAlt, imageURL, newLine+newLine) + caption + newLine
 
 	case CodeBlock:
 		return fmt.Sprintf("```%s\n%s\n```", p.CodeBlockMetadata.Lang, mdText)
@@ -59,7 +59,6 @@ func (p *Paragraph) process(cfg *Config, sp []string, counter OrderListCounter, 
 		return ""
 
 	case EmbeddedLink:
-		// return fmt.Sprintf("[%s](%s)", p.MixtapeMetadata.MediaResourceId, p.MixtapeMetadata.Href)
 		return fmt.Sprintf("[%s](%s)", p.MixtapeMetadata.Href, p.MixtapeMetadata.Href)
 	default:
 		log.Printf("name: %s unkown paragraph type %d\n", p.Name, p.Type)

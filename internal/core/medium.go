@@ -1,4 +1,4 @@
-package main
+package core
 
 type MediumPost struct {
 	B       string  `json:"b"`

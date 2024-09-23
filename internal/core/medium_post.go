@@ -1,4 +1,4 @@
-package main
+package core
 
 import (
 	"strings"
@@ -6,7 +6,7 @@ import (
 
 type OrderListCounter int
 
-func (p *MediumPost) process(cfg *Config, mr MediaResources) string {
+func (p *MediumPost) Parse(opt *MediumConverterOptions, mr MediaResources) string {
 	payload := p.Payload
 	body := payload.Value.Content.BodyModel
 	mentionedUsers := payload.MentionedUsers
@@ -16,7 +16,7 @@ func (p *MediumPost) process(cfg *Config, mr MediaResources) string {
 	processedParagraphs := make([]string, len(paras))
 
 	if len(secs) > 0 {
-		secs.process(cfg, processedParagraphs)
+		secs.Parse(opt, processedParagraphs)
 	}
 
 	if len(paras) > 0 {
@@ -26,7 +26,7 @@ func (p *MediumPost) process(cfg *Config, mr MediaResources) string {
 			splittedParagraph := strings.Split(para.Text, "")
 
 			for _, m := range para.Markups {
-				m.process(cfg, splittedParagraph, mentionedUsers)
+				m.Parse(opt, splittedParagraph, mentionedUsers)
 			}
 
 			if para.Type == OrderedList {
@@ -35,11 +35,11 @@ func (p *MediumPost) process(cfg *Config, mr MediaResources) string {
 				counter = 0
 			}
 
-			processedText := para.process(cfg, splittedParagraph, counter, mr, mentionedUsers)
+			processedText := para.Parse(opt, splittedParagraph, counter, mr, mentionedUsers)
 
 			processedParagraphs[i] = processedParagraphs[i] + processedText
 		}
 	}
 
-	return strings.Join(processedParagraphs, br+br)
+	return strings.Join(processedParagraphs, newLine+newLine)
 }
