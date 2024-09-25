@@ -106,6 +106,5 @@ func fetchMediaResource(url string) (MediaResources, error) {
 			return nil, err
 		}
 	}
-	log.Println(mrs)
 	return mrs, nil
 }

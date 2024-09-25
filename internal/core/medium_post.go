@@ -1,12 +1,13 @@
 package core
 
 import (
+	"archive/zip"
 	"strings"
 )
 
 type OrderListCounter int
 
-func (p *MediumPost) Parse(opt *MediumConverterOptions, mr MediaResources) string {
+func (p *MediumPost) Parse(w *zip.Writer, opt *MediumConverterOptions, mr MediaResources) string {
 	payload := p.Payload
 	body := payload.Value.Content.BodyModel
 	mentionedUsers := payload.MentionedUsers
@@ -35,7 +36,7 @@ func (p *MediumPost) Parse(opt *MediumConverterOptions, mr MediaResources) strin
 				counter = 0
 			}
 
-			processedText := para.Parse(opt, splittedParagraph, counter, mr, mentionedUsers)
+			processedText := para.Parse(w, opt, splittedParagraph, counter, mr, mentionedUsers)
 
 			processedParagraphs[i] = processedParagraphs[i] + processedText
 		}

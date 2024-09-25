@@ -1,11 +1,14 @@
 package cmd
 
 import (
+	"archive/zip"
+	"bytes"
 	"errors"
 	"fmt"
 	"go-medium2markdown/internal/core"
 	"log"
 	"os"
+	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -27,14 +30,43 @@ var rootCmd = &cobra.Command{
 		}
 
 		mco := core.NewMediumConverterOption()
+		mco.IsDownloadAssets = true
 		mc := core.NewMediumConverter(mco)
 
-		res, err := mc.Convert(args[0])
+		buf := new(bytes.Buffer)
+		w := zip.NewWriter(buf)
+
+		// Before adding any files to the assets folder
+		assetsFolder := &zip.FileHeader{
+			Name:     "assets/",
+			Method:   zip.Store, // directories should use Store method
+			Modified: time.Now(),
+		}
+		assetsFolder.SetMode(0755) // This sets permissions and ensures it's not hidden
+		_, err := w.CreateHeader(assetsFolder)
+		if err != nil {
+			log.Printf("Failed to create assets folder in zip: %v", err)
+			return err
+		}
+
+		err = mc.Convert(args[0], w)
 		if err != nil {
 			log.Println(err)
 		}
 
-		fmt.Println(res)
+		log.Println("Closing zip writer...")
+		err = w.Close()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		log.Println("Writing zip file to disk...")
+		err = os.WriteFile("archive.zip", buf.Bytes(), 0644)
+		if err != nil {
+			panic(err)
+		}
+
+		log.Printf("Zip file written successfully. Size: %d bytes", buf.Len())
 
 		return nil
 	},
