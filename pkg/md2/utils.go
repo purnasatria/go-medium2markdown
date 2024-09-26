@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"io"
 	"net/http"
+	"net/url"
 	"reflect"
 )
 
@@ -83,4 +84,12 @@ func isFieldEmpty(s interface{}, fieldName string) bool {
 	default:
 		return reflect.DeepEqual(f.Interface(), reflect.Zero(f.Type()).Interface())
 	}
+}
+
+func isValidURL(input string) error {
+	_, err := url.Parse(input)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -1,7 +1,7 @@
 package main
 
-import "go-medium2markdown/cmd"
+import "go-medium2markdown/internal/cli"
 
 func main() {
-	cmd.Exceute()
+	cli.Exceute()
 }

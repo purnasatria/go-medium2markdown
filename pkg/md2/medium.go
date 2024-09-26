@@ -1,5 +1,10 @@
 package md2
 
+import (
+	"encoding/json"
+	"errors"
+)
+
 type MediumPost struct {
 	B       string  `json:"b"`
 	Payload Payload `json:"payload"`
@@ -342,4 +347,11 @@ type MixtapeMetadata struct {
 	MediaResourceId  string `json:"mediaResourceId"`
 	ThumbnailImageId string `json:"thumbnailImageId"`
 	Href             string `json:"href"`
+}
+
+func toMediumPost(mp *MediumPost, jsonByte []byte) error {
+	if err := json.Unmarshal(jsonByte, mp); err != nil {
+		return errors.New("invalid media post response")
+	}
+	return nil
 }

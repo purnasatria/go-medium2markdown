@@ -8,11 +8,32 @@ import (
 	"strings"
 )
 
+func (p *Paragraph) handleEmbed() string {
+	if p.Type != 11 {
+		return ""
+	}
+
+	mm, err := p.fetchMediaResource()
+	if err != nil {
+		return ""
+	}
+
+	if !isFieldEmpty(mm, "Gist") {
+		gist, err := p.embedGithubGist(mm)
+		if err != nil {
+			return p.embedDefault(mm)
+		}
+		return gist
+	}
+
+	return p.embedDefault(mm)
+}
+
 func (p *Paragraph) isEmbedType() bool {
 	return p.Type == Embed
 }
 
-func (p *Paragraph) fetcMediaResource() (*MediumMedia, error) {
+func (p *Paragraph) fetchMediaResource() (*MediumMedia, error) {
 	if !p.isEmbedType() {
 		return nil, newError("Paragraph %s invalid type %d", p.Name, p.Type)
 	}
@@ -88,7 +109,7 @@ func (p *Paragraph) embedGithubGist(mm *MediumMedia) (string, error) {
 
 		res.WriteString(fmt.Sprintf("\n```%s\n", language))
 		res.WriteString(strings.ReplaceAll(string(gistCode), "\t", "  "))
-		res.WriteString(fmt.Sprintf("\n```\n[Original URL](%s)\n"))
+		res.WriteString(fmt.Sprintf("\n```\n[Original URL](%s)\n", mm.Payload.Value.Href))
 	}
 
 	return res.String(), nil
