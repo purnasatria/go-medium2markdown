@@ -28,10 +28,9 @@ var rootCmd = &cobra.Command{
 		}
 
 		buf := new(bytes.Buffer)
-		// w := zip.NewWriter(buf)
 
 		mco := md2.Options{}
-		mco.IsDownloadAssets = true
+		// TODO: handle custom options from file
 		mc := md2.NewConverter(buf, mco)
 
 		err := mc.Convert(args[0])
@@ -39,19 +38,20 @@ var rootCmd = &cobra.Command{
 			log.Println(err)
 		}
 
-		// log.Println("Closing zip writer...")
-		// err = w.Close()
-		// if err != nil {
-		// 	log.Fatal(err)
-		// }
+		if mco.IsDownloadAssets {
+			log.Println("Writing zip file to disk...")
+			err = os.WriteFile(mc.Metadata.Slug+".zip", buf.Bytes(), 0644)
+			if err != nil {
+				panic(err)
+			}
+			log.Printf("Zip file written successfully. Size: %d bytes", buf.Len())
+		} else {
+			err = os.WriteFile(mc.Metadata.Slug+".md", buf.Bytes(), 0644)
+			if err != nil {
+				panic(err)
+			}
 
-		log.Println("Writing zip file to disk...")
-		err = os.WriteFile("archive.zip", buf.Bytes(), 0644)
-		if err != nil {
-			panic(err)
 		}
-
-		log.Printf("Zip file written successfully. Size: %d bytes", buf.Len())
 
 		return nil
 	},

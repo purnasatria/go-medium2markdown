@@ -3,38 +3,45 @@ package md2
 import (
 	"archive/zip"
 	"bytes"
-	"log"
 )
 
 type Converter struct {
-	Buffer  *bytes.Buffer
-	Options Options
+	Metadata MediumMetadata
+	Buffer   *bytes.Buffer
+	Options  Options
 }
 
-type CoverterWithZip struct {
-	Converter
-	zip.Writer
+type MediumMetadata struct {
+	Title    string
+	Subtitle string
+	Slug     string
 }
 
 func NewConverter(buf *bytes.Buffer, opt ...Options) *Converter {
 	c := &Converter{
-		Options: getDefaultOptions(),
+		Options: Options{},
 		Buffer:  buf,
 	}
 
 	if len(opt) > 0 {
-		usedOpt := opt[0]
-		c.Options = usedOpt
+		custOpt := opt[0]
+		c.Options = custOpt
+	}
+
+	defOpt := getDefaultOptions()
+
+	if c.Options.MarkupSymbol.Section == "" {
+		c.Options.MarkupSymbol.Section = defOpt.MarkupSymbol.Section
+	}
+
+	if c.Options.MarkupSymbol.Italic == "" {
+		c.Options.MarkupSymbol.Italic = defOpt.MarkupSymbol.Italic
 	}
 
 	return c
 }
 
 func (c *Converter) Convert(mediumPostURL string) error {
-	w := zip.NewWriter(c.Buffer)
-	defer w.Close()
-
-	log.Printf("IsDownloadAssets: %v", c.Options.IsDownloadAssets)
 	err := isValidURL(mediumPostURL)
 	if err != nil {
 		return err
@@ -48,38 +55,28 @@ func (c *Converter) Convert(mediumPostURL string) error {
 
 	toMediumPost(&mp, res)
 
-	title := mp.Payload.Value.Slug
+	c.Metadata.Title = mp.Payload.Value.Title
+	c.Metadata.Subtitle = mp.Payload.Value.Content.Subtitle
+	c.Metadata.Slug = mp.Payload.Value.Slug
 
-	log.Printf("Fetched Medium post. Title: %s", title)
-	log.Printf("Number of paragraphs: %d", len(mp.Payload.Value.Content.BodyModel.Paragraphs))
+	if c.Options.IsDownloadAssets {
+		w := zip.NewWriter(c.Buffer)
+		defer w.Close()
 
-	mpContent := mp.Parse(w, c.Options)
+		mpContent := mp.Parse(w, c.Options)
 
-	stringWriter, err := w.Create(title + ".md")
-	if err != nil {
-		log.Printf("Failed to create markdown entry in zip: %v", err)
-		return err
+		stringWriter, err := w.Create(c.Metadata.Slug + ".md")
+		if err != nil {
+			return err
+		}
+
+		_, err = stringWriter.Write([]byte(mpContent))
+		if err != nil {
+			return err
+		}
+	} else {
+		mpContent := mp.Parse(nil, c.Options)
+		c.Buffer.Write([]byte(mpContent))
 	}
-
-	_, err = stringWriter.Write([]byte(mpContent))
-	if err != nil {
-		return err
-	}
-
-	log.Println("Markdown content added to zip successfully")
-
 	return nil
 }
-
-// type CloseableWriter struct {
-// 	Writer  io.Writer
-// 	Buffer  *bytes.Buffer
-// 	cleanup func() error
-// }
-//
-// func (cw *CloseableWriter) Close() error {
-// 	if cw.cleanup != nil {
-// 		return cw.cleanup()
-// 	}
-// 	return nil
-// }

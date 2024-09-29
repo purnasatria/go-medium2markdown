@@ -10,7 +10,7 @@ type Options struct {
 	IsDownloadAssets bool         `yaml:"isDownloadAssets"`
 }
 
-func getDefaultOptions() Options {
+func getDefaultOptions() *Options {
 	conf := Options{
 		MarkupSymbol{
 			Italic:  "*",
@@ -19,5 +19,5 @@ func getDefaultOptions() Options {
 		false,
 	}
 
-	return conf
+	return &conf
 }
