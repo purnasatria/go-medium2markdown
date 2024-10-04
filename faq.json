@@ -1,0 +1,90 @@
+{
+  "title": "Frequently Asked Questions",
+  "sections": [
+    {
+      "name": "Usage",
+      "questions": [
+        {
+          "id": "q1",
+          "question": "What does this tool do?",
+          "answer": "This tool converts Medium articles into Markdown format, allowing you to easily repurpose or archive your Medium content."
+        },
+        {
+          "id": "q4",
+          "question": "How do I use the Medium to Markdown converter?",
+          "answer": "Follow these simple steps:\n1. Copy the URL of the Medium article you want to convert.\n2. Paste the URL into the input field on our website.\n3. Click the \"Convert\" button.\n4. Wait for the conversion to complete.\n5. Download the resulting Markdown file."
+        },
+        {
+          "id": "q5",
+          "question": "What types of Medium content can I convert?",
+          "answer": "You can convert any public Medium article. This includes your own articles and articles written by others, as long as you have the right to use them."
+        }
+      ]
+    },
+    {
+      "name": "Technical Details",
+      "questions": [
+        {
+          "id": "q6",
+          "question": "What elements of a Medium article are preserved in the conversion?",
+          "answer": "The converter preserves most elements, including text formatting (bold, italic), headings, links, images, and code blocks. Some complex layouts may be simplified."
+        },
+        {
+          "id": "q8",
+          "question": "How are code blocks handled in the conversion?",
+          "answer": "Code blocks are preserved and converted to Markdown code block syntax, including the language specification for syntax highlighting where available."
+        },
+        {
+          "id": "q9",
+          "question": "How are embedded elements (like tweets or GitHub gists) handled?",
+          "answer": "Embedded elements are converted to Markdown format where possible. For complex embeds, a link to the original content is provided."
+        }
+      ]
+    },
+    {
+      "name": "Troubleshooting",
+      "questions": [
+        {
+          "id": "q10",
+          "question": "What should I do if the conversion fails?",
+          "answer": "If the conversion fails, try the following:\n1. Check if the Medium URL is correct and accessible.\n2. You can try add '?format=json' in the end of your link to check if the json format is available.\n3. Try again after a few minutes, as there might be temporary issues.\n."
+        },
+        {
+          "id": "q11",
+          "question": "The Markdown output looks different from the original Medium article. Is this normal?",
+          "answer": "While the converter aims to preserve the content and structure of the original article, some formatting differences are normal due to the limitations of Markdown. The core content, headings, links, and images should be preserved."
+        }
+      ]
+    },
+    {
+      "name": "Privacy and Data",
+      "questions": [
+        {
+          "id": "q12",
+          "question": "Do you store the articles I convert?",
+          "answer": "No, we do not store any content from the articles you convert. The conversion happens in real-time, and no data is retained after you download the Markdown file."
+        },
+        {
+          "id": "q13",
+          "question": "Is my data safe when using this tool?",
+          "answer": "Yes, your data is safe. We only process the public URL you provide to generate the Markdown output. We do not collect or store any personal information."
+        }
+      ]
+    },
+    {
+      "name": "Copyright and Usage Policies",
+      "questions": [
+        {
+          "id": "q16",
+          "question": "Can I convert any public Medium article with this tool?",
+          "answer": "While our tool is technically capable of converting any public Medium article, we strongly encourage users to only convert articles they own or have explicit permission to use. Converting and repurposing content you don't own may infringe on copyright laws."
+        },
+        {
+          "id": "q17",
+          "question": "What are the copyright considerations when using this tool?",
+          "answer": "Please be aware of the following copyright considerations:\n- Only convert articles you've written or have explicit permission to use.\n- Respect Medium's copyright policy: https://help.medium.com/hc/en-us/articles/200737695-Report-copyright-infringement-or-plagiarism\n- Converting articles you don't own for personal reference might fall under fair use, but publishing or distributing this content could be copyright infringement."
+        }
+      ]
+    }
+  ]
+}

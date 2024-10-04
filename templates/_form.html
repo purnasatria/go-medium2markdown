@@ -1,0 +1,132 @@
+{{define "_form"}}
+<form
+  hx-post="/convert"
+  hx-swap="none"
+  class="flex flex-col gap-2 w-full mt-10"
+>
+  <div class="form-control md:p-0 p-4">
+    <div class="input-group flex sm:flex-row flex-col gap-4">
+      <input
+        class="input input-bordered grow"
+        id="url"
+        name="url"
+        type="url"
+        placeholder="https://medium.com/..."
+        required
+      />
+      <!-- <button class="btn htmx-indicator-target">Convert</button> -->
+      <button class="btn htmx-indicato" disabled>
+        Converting
+        <span class="loading loading-dots loading-md"></span>
+      </button>
+    </div>
+  </div>
+  <div
+    class="bg-base-200 collapse collapse-arrow focus:outline-none focus:border-none"
+  >
+    <input id="option-checkbox" type="checkbox" class="peer" />
+    <div
+      class="collapse-title text-right bg-base-100 text-base-30 peer-checked:bg-base-100 peer-checked:text-base-300-content"
+    >
+      Advance options
+    </div>
+    <div
+      class="collapse-content text-xs bg-base-100 text-base-content peer-checked:bg-base-100 peer-checked:text-base-content focus:outline-none"
+    >
+      <div class="flex sm:flex-row flex-col sm:gap-8 gap-4 border rounded p-4">
+        <div class="mb-4">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2"
+            for="italicSymbol"
+          >
+            Italic Symbol
+          </label>
+          <div class="form-control">
+            <label class="label cursor-pointer">
+              <input
+                id="*"
+                value="*"
+                type="radio"
+                name="italicSymbol"
+                class="radio radio-primary"
+                checked="checked"
+              />
+              <span class="label-text">*</span>
+            </label>
+          </div>
+          <div class="form-control">
+            <label class="label cursor-pointer">
+              <input
+                id="_"
+                value="_"
+                type="radio"
+                name="italicSymbol"
+                class="radio radio-primary"
+              />
+              <span class="label-text">_</span>
+            </label>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2"
+            for="sectionSymbol"
+          >
+            Section Symbol
+          </label>
+          <div class="form-control">
+            <label class="label cursor-pointer">
+              <input
+                value="---"
+                type="radio"
+                name="sectionSymbol"
+                class="radio radio-primary"
+                checked="checked"
+              />
+              <span class="label-text">---</span>
+            </label>
+          </div>
+          <div class="form-control">
+            <label class="label cursor-pointer">
+              <input
+                value="***"
+                type="radio"
+                name="sectionSymbol"
+                class="radio radio-primary"
+              />
+              <span class="label-text">***</span>
+            </label>
+          </div>
+          <div class="form-control">
+            <label class="label cursor-pointer">
+              <input
+                value="___"
+                type="radio"
+                name="sectionSymbol"
+                class="radio radio-primary"
+              />
+              <span class="label-text">___</span>
+            </label>
+          </div>
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700 text-sm font-bold mb-2">
+            Other options
+          </label>
+          <div class="form-control">
+            <label class="label cursor-pointer">
+              <input
+                type="checkbox"
+                name="isDownloadAssets"
+                value="true"
+                class="checkbox"
+              />
+              <span class="label-text ml-4">Download Assets</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+{{end}}

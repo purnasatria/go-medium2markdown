@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en" data-theme="lofi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MD2: Medium to Markdown Converter</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,200..900;1,200..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bitter:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link href="/static/output.css" rel="stylesheet" />
+    <script
+      src="https://kit.fontawesome.com/c262b3c052.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://unpkg.com/htmx.org@2.0.2"
+      integrity="sha384-Y7hw+L/jvKeWIRRkqWYfPcvVxHzVzn5REgzbawhxAuQGwX1XWe70vji+VSeHOThJ"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body class="font-bitter">
+    <!-- {{template "_navbar"}} -->
+    <main>
+      <section>
+        <div class="hero min-h-screen">
+          <div class="flex flex-col justify-between items-center">
+            <div class="flex-col hero-content text-center">
+              <div class="max-w-2xl">
+                <h1 class="font-bold font-crimson text-4xl">
+                  MD2: Medium to Markdown Converter
+                </h1>
+                <p class="py-6">
+                  Transform your Medium posts into clean, portable Markdown with
+                  MD2. Simply paste your Medium URL, and watch as your content
+                  is converted instantly. Perfect for writers, developers, and
+                  content creators who want to repurpose their Medium articles
+                  or migrate to other platforms.
+                </p>
+                {{template "_form"}}
+              </div>
+              <a
+                href="#faq"
+                class="text-md flex flex-col justify-center items-center gap-2"
+              >
+                <p>More info</p>
+                <i class="animate-bounce fa-regular fa-circle-down"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section id="faq" class="mx-auto container max-w-screen-lg w-full">
+        {{template "_faq" .}}
+      </section>
+    </main>
+    {{template "_footer"}}
+    <script>
+      document.body.addEventListener("htmx:afterOnLoad", function (evt) {
+        var contentDisposition = evt.detail.xhr.getResponseHeader(
+          "Content-Disposition",
+        );
+        var contentType = evt.detail.xhr.getResponseHeader("Content-Type");
+
+        if (
+          contentDisposition &&
+          contentDisposition.indexOf("attachment") !== -1
+        ) {
+          var fileName = contentDisposition
+            .split("filename=")[1]
+            .replace(/["']/g, "");
+          var blob = new Blob([evt.detail.xhr.response], { type: contentType });
+          var url = window.URL.createObjectURL(blob);
+          var a = document.createElement("a");
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          window.URL.revokeObjectURL(url);
+          a.remove();
+
+          // Optionally, you can provide feedback to the user here
+          // For example, using a toast notification or updating some status text
+        }
+      });
+    </script>
+  </body>
+</html>

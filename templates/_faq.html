@@ -1,0 +1,31 @@
+{{define "_faq"}}
+<div>
+  <h2 class="text-2xl font-bold mt-12 mb-6">{{.FAQ.Title}}</h2>
+  <div class="space-y-4">
+    {{range $index, $section := .FAQ.Sections}}
+    <div class="collapse collapse-arrow bg-base-200">
+      <input
+        type="radio"
+        name="faq-accordion"
+        {{if
+        eq
+        $index
+        0}}checked="checked"
+        {{end}}
+      />
+      <div class="collapse-title text-xl font-medium">{{$section.Name}}</div>
+      <div class="collapse-content">
+        <div class="space-y-4">
+          {{range $section.Questions}}
+          <div>
+            <h3 class="font-bold">{{.Question}}</h3>
+            <p>{{formatAnswer .Answer}}</p>
+          </div>
+          {{end}}
+        </div>
+      </div>
+    </div>
+    {{end}}
+  </div>
+</div>
+{{end}}

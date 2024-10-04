@@ -1,7 +1,10 @@
 package main
 
-import "go-medium2markdown/internal/cli"
+import (
+	"go-medium2markdown/internal/web"
+)
 
 func main() {
-	cli.Exceute()
+	// cli.Exceute()
+	web.Serve()
 }
