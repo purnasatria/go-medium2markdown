@@ -32,11 +32,11 @@
         <div class="hero min-h-screen">
           <div class="flex flex-col justify-between items-center">
             <div class="flex-col hero-content text-center">
-              <div class="max-w-2xl">
-                <h1 class="font-bold font-crimson text-4xl">
+              <div class="max-w-4xl">
+                <h1 class="font-bold font-crimson sm:text-5xl text-3xl">
                   MD2: Medium to Markdown Converter
                 </h1>
-                <p class="py-6">
+                <p class="sm:text-lg py-6">
                   Transform your Medium posts into clean, portable Markdown with
                   MD2. Simply paste your Medium URL, and watch as your content
                   is converted instantly. Perfect for writers, developers, and
@@ -46,8 +46,8 @@
                 {{template "_form"}}
               </div>
               <a
-                href="#faq"
-                class="text-sm flex flex-col justify-center items-center gap-2"
+                href="/#faq"
+                class="flex flex-col justify-center items-center gap-4 text-base sm:text-base"
               >
                 <p>More info</p>
                 <i class="animate-bounce fa-regular fa-circle-down"></i>
@@ -56,44 +56,11 @@
           </div>
         </div>
       </section>
-      <section id="faq" class="mx-auto container max-w-screen-lg w-full">
+      <section id="faq" class="flex flex-col items-center">
         {{template "_faq" .}}
       </section>
     </main>
     {{template "_footer"}}
-    <!-- <script> -->
-    <!--   document.body.addEventListener("htmx:beforeOnLoad", function (evt) { -->
-    <!--     var contentDisposition = evt.detail.xhr.getResponseHeader( -->
-    <!--       "Content-Disposition", -->
-    <!--     ); -->
-    <!--     var contentType = evt.detail.xhr.getResponseHeader("Content-Type"); -->
-    <!---->
-    <!--     if ( -->
-    <!--       contentDisposition && -->
-    <!--       contentDisposition.indexOf("attachment") !== -1 -->
-    <!--     ) { -->
-    <!--       evt.detail.shouldSwap = false; -->
-    <!--       evt.preventDefault(); -->
-    <!---->
-    <!--       var fileName = contentDisposition -->
-    <!--         .split("filename=")[1] -->
-    <!--         .replace(/["']/g, ""); -->
-    <!--       var blob = new Blob([evt.detail.xhr.response], { type: contentType }); -->
-    <!--       var url = window.URL.createObjectURL(blob); -->
-    <!--       var a = document.createElement("a"); -->
-    <!--       a.style.display = "none"; -->
-    <!--       a.href = url; -->
-    <!--       a.download = fileName; -->
-    <!--       document.body.appendChild(a); -->
-    <!--       a.click(); -->
-    <!--       window.URL.revokeObjectURL(url); -->
-    <!--       a.remove(); -->
-    <!---->
-    <!--       // Optionally, you can provide feedback to the user here -->
-    <!--       // For example, using a toast notification or updating some status text -->
-    <!--     } -->
-    <!--   }); -->
-    <!-- </script> -->
     <script>
       htmx.defineExtension("htmx-download", {
         onEvent: function (name, evt) {

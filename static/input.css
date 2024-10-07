@@ -2,30 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth !important;
+}
+
 .htmx-indicator {
-  /* opacity: 0; */
   display: none;
-  transition: display 500ms ease-in;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 700ms ease-in,
+    visibility 700ms ease-in;
 }
-.htmx-request .htmx-indicator {
-  /* opacity: 1; */
-  display: inline;
-}
+
+.htmx-request .htmx-indicator,
 .htmx-request.htmx-indicator {
-  /* opacity: 1; */
-  display: inline;
+  display: flex;
+  visibility: visible;
+  opacity: 1;
 }
 
 .htmx-indicator-target {
-  /* opacity: 1; */
-  transition: display 500ms ease-in;
-  display: inline;
+  display: flex;
+  visibility: visible;
+  opacity: 1;
+  transition:
+    opacity 700ms ease-in,
+    visibility 700ms ease-in;
 }
-.htmx-request .htmx-indicator-target {
-  /* opacity: 0; */
-  display: none;
-}
+
+.htmx-request .htmx-indicator-target,
 .htmx-request.htmx-indicator-target {
-  /* opacity: 0; */
   display: none;
+  visibility: hidden;
+  opacity: 0;
 }

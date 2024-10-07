@@ -12,12 +12,17 @@
         {
           "id": "q4",
           "question": "How do I use the Medium to Markdown converter?",
-          "answer": "Follow these simple steps:\n1. Copy the URL of the Medium article you want to convert.\n2. Paste the URL into the input field on our website.\n3. Click the \"Convert\" button.\n4. Wait for the conversion to complete.\n5. Download the resulting Markdown file."
+          "answer": "Follow these simple steps:\n1. Copy the URL of the Medium article you want to convert.\n2. Paste the URL into the input field on our website.\n3. Click the \"Convert\" button.\n4. Wait for the conversion to complete.\n5. Download will automatically start."
         },
         {
           "id": "q5",
           "question": "What types of Medium content can I convert?",
           "answer": "You can convert any public Medium article. This includes your own articles and articles written by others, as long as you have the right to use them."
+        },
+        {
+          "id": "q5",
+          "question": "What is 'Download Assets?'",
+          "answer": "When you check 'Download Asset' you will get archived Medium post with downloaded image in the post in zip format. Please note, if you using Windows File Explorer to open or extract the file, the images will not shown up inside the folder assets. You can try using another 3rd party application like 7-zip."
         }
       ]
     },

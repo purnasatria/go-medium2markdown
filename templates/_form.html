@@ -3,23 +3,23 @@
   hx-post="/convert"
   hx-swap="none"
   hx-ext="htmx-download"
-  class="flex flex-col gap-2 w-full mt-10"
+  class="flex flex-col sm:gap-2 w-full sm:mt-10"
 >
-  <div class="form-control md:p-0 p-4">
+  <div class="form-control">
     <div class="input-group flex sm:flex-row flex-col gap-4">
       <input
-        class="input input-bordered grow"
+        class="input input-bordered sm:input-lg grow"
         id="url"
         name="url"
         type="url"
         placeholder="https://medium.com/..."
         required
       />
-      <button class="btn htmx-indicator-target">Convert</button>
-      <!-- <button class="btn htmx-indicato" disabled> -->
-      <!--   Converting -->
-      <!--   <span class="loading loading-dots loading-md"></span> -->
-      <!-- </button> -->
+      <button class="btn sm:btn-lg htmx-indicator-target">Convert</button>
+      <button class="btn sm:btn-lg htmx-indicator" disabled>
+        Converting
+        <span class="loading loading-dots loading-md"></span>
+      </button>
     </div>
   </div>
   <div
@@ -27,17 +27,17 @@
   >
     <input id="option-checkbox" type="checkbox" class="peer" />
     <div
-      class="flex items-center justify-end text-sm collapse-title text-right bg-base-100 text-base-30 peer-checked:bg-base-100 peer-checked:text-base-300-content"
+      class="flex items-center justify-end sm:text-base text-sm collapse-title text-right bg-base-100 text-base-30 peer-checked:bg-base-100 peer-checked:text-base-300-content"
     >
       Advance options
     </div>
     <div
-      class="collapse-content text-xs bg-base-100 text-base-content peer-checked:bg-base-100 peer-checked:text-base-content focus:outline-none"
+      class="collapse-content text-sm bg-base-100 text-base-content peer-checked:bg-base-100 peer-checked:text-base-content focus:outline-none"
     >
       <div class="flex sm:flex-row flex-col sm:gap-8 gap-4 border rounded p-4">
         <div class="mb-4">
           <label
-            class="block text-gray-700 text-sm font-bold mb-2"
+            class="block text-gray-700 sm:text-base text-sm font-bold mb-2"
             for="italicSymbol"
           >
             Italic Symbol
@@ -70,7 +70,7 @@
         </div>
         <div class="mb-4">
           <label
-            class="block text-gray-700 text-sm font-bold mb-2"
+            class="block text-gray-700 sm:text-base text-sm font-bold mb-2"
             for="sectionSymbol"
           >
             Section Symbol
@@ -112,7 +112,7 @@
         </div>
         <div class="mb-4">
           <label
-            class="block text-gray-700 text-sm font-bold mb-2 sm:text-left"
+            class="block text-gray-700 sm:text-base text-sm font-bold mb-2 sm:text-left"
           >
             Other options
           </label>
