@@ -29,7 +29,7 @@ var rootCmd = &cobra.Command{
 
 		buf := new(bytes.Buffer)
 
-		mco := md2.Options{}
+		mco := md2.Options{IsDownloadAssets: true}
 		// TODO: handle custom options from file
 		mc := md2.NewConverter(buf, mco)
 

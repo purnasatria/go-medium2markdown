@@ -2,6 +2,7 @@
 <form
   hx-post="/convert"
   hx-swap="none"
+  hx-ext="htmx-download"
   class="flex flex-col gap-2 w-full mt-10"
 >
   <div class="form-control md:p-0 p-4">
@@ -14,11 +15,11 @@
         placeholder="https://medium.com/..."
         required
       />
-      <!-- <button class="btn htmx-indicator-target">Convert</button> -->
-      <button class="btn htmx-indicato" disabled>
-        Converting
-        <span class="loading loading-dots loading-md"></span>
-      </button>
+      <button class="btn htmx-indicator-target">Convert</button>
+      <!-- <button class="btn htmx-indicato" disabled> -->
+      <!--   Converting -->
+      <!--   <span class="loading loading-dots loading-md"></span> -->
+      <!-- </button> -->
     </div>
   </div>
   <div
@@ -26,7 +27,7 @@
   >
     <input id="option-checkbox" type="checkbox" class="peer" />
     <div
-      class="collapse-title text-right bg-base-100 text-base-30 peer-checked:bg-base-100 peer-checked:text-base-300-content"
+      class="flex items-center justify-end text-sm collapse-title text-right bg-base-100 text-base-30 peer-checked:bg-base-100 peer-checked:text-base-300-content"
     >
       Advance options
     </div>
@@ -110,7 +111,9 @@
           </div>
         </div>
         <div class="mb-4">
-          <label class="block text-gray-700 text-sm font-bold mb-2">
+          <label
+            class="block text-gray-700 text-sm font-bold mb-2 sm:text-left"
+          >
             Other options
           </label>
           <div class="form-control">

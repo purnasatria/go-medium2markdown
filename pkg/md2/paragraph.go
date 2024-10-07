@@ -6,6 +6,7 @@ import (
 	"log"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 func (p *Paragraph) Parse(w *zip.Writer, sp []string, counter OrderListCounter, mus MentionedUsers, opt Options) string {
@@ -26,43 +27,65 @@ func (p *Paragraph) Parse(w *zip.Writer, sp []string, counter OrderListCounter, 
 
 	case Image:
 		var caption string
+		var imageSize string
+		imageLayout := p.Layout
 		imageID := p.Metadata.Id
-		imageURL := mediumCdnUrl + "/v2/" + imageID
+		imageURL := mediumCdnUrl + "/v2/format:webp/" + imageID
 		imageAlt := p.Metadata.Alt
+
+		if imageLayout != 0 {
+			switch imageLayout {
+			case 1:
+				imageSize = "680"
+			case 3:
+				imageSize = "1110"
+			}
+		}
+
+		if imageSize != "" {
+			imageURL = mediumCdnUrl + fmt.Sprintf("/v2/resize:fit:%s/format:webp/", imageSize) + imageID
+		}
 
 		if p.Text != "" {
 			caption = fmt.Sprintf("%s%s%s", opt.MarkupSymbol.Italic, mdText, opt.MarkupSymbol.Italic)
 		}
 
-		imageLink := fmt.Sprintf("![%s](%s)%s", imageAlt, imageURL, newLine) + caption + newLine
+		defaultImageURL := fmt.Sprintf("![%s](%s)", imageAlt, imageURL) + newLine + newLine + caption + newLine
 
 		if opt.IsDownloadAssets {
 			imageData, err := downloadFile(imageURL)
 			if err != nil {
-				return imageLink
+				return defaultImageURL
 			}
 
 			if len(imageData) == 0 {
-				return imageLink
+				return defaultImageURL
 			}
 
-			imgPath := filepath.Join("assets", p.Name+"_"+imageID)
-			imgWriter, err := w.Create(imgPath)
+			imgPath := filepath.Join("assets", filepath.Base(p.Name+"_"+imageID))
+			// imgWriter, err := w.Create(imgPath)
+			imgWriter, err := w.CreateHeader(&zip.FileHeader{
+				Name:     imgPath,
+				Modified: time.Now(),
+				Method:   zip.Store,
+			})
 			if err != nil {
-				return imageLink
+				return defaultImageURL
 			}
 
+			// _, err = io.Copy(imgWriter, bytes.NewReader(imageData))
 			n, err := imgWriter.Write(imageData)
 			if err != nil {
-				return imageLink
-			}
-			if n != len(imageData) {
-				return imageLink
+				return defaultImageURL
 			}
 
-			return fmt.Sprintf("![%s](%s)%s", imageAlt, "./assets/"+p.Name+"_"+imageID, newLine) + caption + newLine
+			if n != len(imageData) {
+				return defaultImageURL
+			}
+
+			return fmt.Sprintf("![%s](%s)", imageAlt, "./assets/"+p.Name+"_"+imageID) + newLine + newLine + caption + newLine
 		} else {
-			return imageLink
+			return defaultImageURL
 		}
 
 	case CodeBlock:

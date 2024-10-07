@@ -1,0 +1,50 @@
+# Go specific
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+/vendor/
+/Godeps/
+
+# Air specific
+/tmp/
+
+# Tailwind specific
+/node_modules/
+/public/css/
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+# IDE specific
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Build output
+/dist/
+/build/
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.local
+
+# Dependency directories
+/jspm_packages/
+/bower_components/
+
+# Compiled CSS
+*.css.map
+
+# Misc
+*.bak
+*.tmp
+*.temp

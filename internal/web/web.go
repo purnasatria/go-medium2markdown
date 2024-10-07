@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/labstack/echo/v4"
@@ -106,13 +107,22 @@ func handleConvert(c echo.Context) error {
 		return c.String(http.StatusInternalServerError, "Error converting: "+err.Error())
 	}
 
-	if mco.IsDownloadAssets {
-		c.Response().Header().Set("Content-Type", "application/zip")
-		c.Response().Header().Set("Content-Disposition", "attachment; filename="+mc.Metadata.Slug+".zip")
-	} else {
-		c.Response().Header().Set("Content-Type", "text/markdown")
-		c.Response().Header().Set("Content-Disposition", "attachment; filename="+mc.Metadata.Slug+".md")
+	filename := mc.Metadata.Slug
+	if filename == "" {
+		filename = "converted"
 	}
+
+	if mco.IsDownloadAssets {
+		c.Response().Header().Set(echo.HeaderContentType, "application/zip")
+		// c.Response().Header().Set(echo.HeaderContentDisposition, "attachment; filename*=UTF-8''"+filename+".zip")
+		c.Response().Header().Set(echo.HeaderContentDisposition, "attachment; filename="+mc.Metadata.Slug+".zip")
+	} else {
+		c.Response().Header().Set(echo.HeaderContentType, "text/markdown")
+		// c.Response().Header().Set(echo.HeaderContentDisposition, "attachment; filename="+mc.Metadata.Slug+".md")
+		c.Response().Header().Set(echo.HeaderContentDisposition, "attachment; filename="+mc.Metadata.Slug+".md")
+	}
+
+	c.Response().Header().Set("Content-Length", strconv.Itoa(buf.Len()))
 
 	return c.Blob(http.StatusOK, c.Response().Header().Get("Content-Type"), buf.Bytes())
 }

@@ -18,7 +18,7 @@ func (p *Paragraph) handleEmbed() string {
 		return ""
 	}
 
-	if !isFieldEmpty(mm, "Gist") {
+	if (mm.Payload.Value.Gist != Gist{}) {
 		gist, err := p.embedGithubGist(mm)
 		if err != nil {
 			return p.embedDefault(mm)
@@ -40,7 +40,7 @@ func (p *Paragraph) fetchMediaResource() (*MediumMedia, error) {
 
 	var mm MediumMedia
 
-	res, err := callMediumAPI(mediumMediaUrl + p.Iframe.MediaResourceId + mediumJsonPrefix)
+	res, err := callMediumAPI(mediumMediaUrl + p.Iframe.MediaResourceId + mediumFormatJson)
 	if err != nil {
 		return nil, err
 	}
@@ -53,8 +53,8 @@ func (p *Paragraph) fetchMediaResource() (*MediumMedia, error) {
 }
 
 func (p *Paragraph) embedDefault(mm *MediumMedia) string {
-	return fmt.Sprintf("<iframe src=\"%s\" width=\"%d\" height=\"%d\"></iframe>\n[Original URL](%s)",
-		fmt.Sprintf("%s%s", mediumMediaUrl, mm.Payload.Value.MediaResourceID),
+	return fmt.Sprintf("<iframe src=\"%s\" width=\"%d\" height=\"%d\"></iframe>\n\n[Original URL](%s)",
+		mm.Payload.Value.IframeSrc,
 		mm.Payload.Value.IframeWidth,
 		mm.Payload.Value.IframeHeight,
 		mm.Payload.Value.Href,
@@ -94,7 +94,6 @@ func (p *Paragraph) embedGithubGist(mm *MediumMedia) (string, error) {
 
 	for _, file := range gistJson.Files {
 		language := strings.ToLower(file.Language)
-		fmt.Println("gistCode", file.RawURL)
 
 		gistCodeResp, err := http.Get(file.RawURL)
 		if err != nil {
@@ -107,7 +106,7 @@ func (p *Paragraph) embedGithubGist(mm *MediumMedia) (string, error) {
 			return "", newError("error reading gist code: %w", err)
 		}
 
-		res.WriteString(fmt.Sprintf("\n```%s\n", language))
+		res.WriteString(fmt.Sprintf("```%s\n", language))
 		res.WriteString(strings.ReplaceAll(string(gistCode), "\t", "  "))
 		res.WriteString(fmt.Sprintf("\n```\n[Original URL](%s)\n", mm.Payload.Value.Href))
 	}
