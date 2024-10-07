@@ -4,7 +4,6 @@ go 1.20
 
 require (
 	github.com/labstack/echo/v4 v4.12.0
-	github.com/rs/zerolog v1.33.0
 	github.com/spf13/cobra v1.7.0
 )
 

@@ -3,10 +3,8 @@ package md2
 import (
 	"archive/zip"
 	"fmt"
-	"log"
 	"path/filepath"
 	"strings"
-	"time"
 )
 
 func (p *Paragraph) Parse(w *zip.Writer, sp []string, counter OrderListCounter, mus MentionedUsers, opt Options) string {
@@ -36,9 +34,9 @@ func (p *Paragraph) Parse(w *zip.Writer, sp []string, counter OrderListCounter, 
 		if imageLayout != 0 {
 			switch imageLayout {
 			case 1:
-				imageSize = "680"
+				imageSize = imageLayout1Size
 			case 3:
-				imageSize = "1110"
+				imageSize = imageLayout3Size
 			}
 		}
 
@@ -63,23 +61,8 @@ func (p *Paragraph) Parse(w *zip.Writer, sp []string, counter OrderListCounter, 
 			}
 
 			imgPath := filepath.Join("assets", filepath.Base(p.Name+"_"+imageID))
-			// imgWriter, err := w.Create(imgPath)
-			imgWriter, err := w.CreateHeader(&zip.FileHeader{
-				Name:     imgPath,
-				Modified: time.Now(),
-				Method:   zip.Store,
-			})
-			if err != nil {
-				return defaultImageURL
-			}
 
-			// _, err = io.Copy(imgWriter, bytes.NewReader(imageData))
-			n, err := imgWriter.Write(imageData)
-			if err != nil {
-				return defaultImageURL
-			}
-
-			if n != len(imageData) {
+			if err = addFileToZip(w, imgPath, imageData); err != nil {
 				return defaultImageURL
 			}
 
@@ -103,7 +86,6 @@ func (p *Paragraph) Parse(w *zip.Writer, sp []string, counter OrderListCounter, 
 	case EmbeddedLink:
 		return fmt.Sprintf("[%s](%s)", p.MixtapeMetadata.Href, p.MixtapeMetadata.Href)
 	default:
-		log.Printf("name: %s unkown paragraph type %d\n", p.Name, p.Type)
 		return mdText
 	}
 }

@@ -3,8 +3,6 @@ package md2
 import (
 	"archive/zip"
 	"bytes"
-	"fmt"
-	"time"
 )
 
 type Converter struct {
@@ -63,31 +61,17 @@ func (c *Converter) Convert(mediumPostURL string) error {
 
 	if c.Options.IsDownloadAssets {
 		w := zip.NewWriter(c.Buffer)
-		// defer w.Close()
 
 		_, err := w.Create("assets/")
 
 		mpContent := mp.Parse(w, c.Options)
 
 		filename := c.Metadata.Slug + ".md"
-		// stringWriter, err := w.Create(c.Metadata.Slug + ".md")
-		stringWriter, err := w.CreateHeader(&zip.FileHeader{
-			Name:     filename,
-			Modified: time.Now(),
-		})
-		if err != nil {
+		if err = addFileToZip(w, filename, []byte(mpContent)); err != nil {
 			return err
 		}
-
-		// _, err = io.Copy(stringWriter, bytes.NewBuffer([]byte(mpContent)))
-		_, err = stringWriter.Write([]byte(mpContent))
-		if err != nil {
-			return err
-		}
-		fmt.Println("test1")
 
 		if err = w.Close(); err != nil {
-			fmt.Println("test")
 			return err
 		}
 	} else {

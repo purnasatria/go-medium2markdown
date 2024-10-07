@@ -1,11 +1,13 @@
 package md2
 
 import (
+	"archive/zip"
 	"bytes"
 	"io"
 	"net/http"
 	"net/url"
 	"reflect"
+	"time"
 )
 
 func callMediumAPI(url string) ([]byte, error) {
@@ -92,4 +94,18 @@ func isValidURL(input string) error {
 		return err
 	}
 	return nil
+}
+
+func addFileToZip(w *zip.Writer, filename string, data []byte) error {
+	header := &zip.FileHeader{
+		Name:     filename,
+		Method:   zip.Deflate,
+		Modified: time.Now(),
+	}
+	writer, err := w.CreateHeader(header)
+	if err != nil {
+		return err
+	}
+	_, err = writer.Write(data)
+	return err
 }

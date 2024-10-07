@@ -18,9 +18,9 @@ import (
 
 type FormData struct {
 	URL              string `form:"url"`
-	IsDownloadAssets bool   `form:"isDownloadAssets"`
 	ItalicSymbol     string `form:"italicSymbol"`
 	SectionSymbol    string `form:"sectionSymbol"`
+	IsDownloadAssets bool   `form:"isDownloadAssets"`
 }
 
 type FAQ struct {
@@ -45,6 +45,7 @@ func Serve() {
 	// Serve static files
 	e.Static("/static", "static")
 
+	// Template
 	t := &Template{
 		templates: template.Must(template.New("").Funcs(template.FuncMap{
 			"formatAnswer": formatAnswer,
@@ -114,11 +115,9 @@ func handleConvert(c echo.Context) error {
 
 	if mco.IsDownloadAssets {
 		c.Response().Header().Set(echo.HeaderContentType, "application/zip")
-		// c.Response().Header().Set(echo.HeaderContentDisposition, "attachment; filename*=UTF-8''"+filename+".zip")
 		c.Response().Header().Set(echo.HeaderContentDisposition, "attachment; filename="+mc.Metadata.Slug+".zip")
 	} else {
 		c.Response().Header().Set(echo.HeaderContentType, "text/markdown")
-		// c.Response().Header().Set(echo.HeaderContentDisposition, "attachment; filename="+mc.Metadata.Slug+".md")
 		c.Response().Header().Set(echo.HeaderContentDisposition, "attachment; filename="+mc.Metadata.Slug+".md")
 	}
 
