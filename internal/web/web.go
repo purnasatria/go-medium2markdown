@@ -99,12 +99,14 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 func handleIndex(c echo.Context) error {
 	faqData, err := os.ReadFile("./faq.json")
 	if err != nil {
+		c.Logger().Error(err)
 		return err
 	}
 
 	var faq FAQ
 	err = json.Unmarshal(faqData, &faq)
 	if err != nil {
+		c.Logger().Error(err)
 		return err
 	}
 	return c.Render(http.StatusOK, "index.html", map[string]interface{}{
@@ -115,6 +117,7 @@ func handleIndex(c echo.Context) error {
 func handleConvert(c echo.Context) error {
 	var formData FormData
 	if err := c.Bind(&formData); err != nil {
+		c.Logger().Error(err)
 		setToastHeader(c, "Error", "Can't read form data: "+err.Error(), ToastError)
 		return err
 	}
@@ -131,6 +134,7 @@ func handleConvert(c echo.Context) error {
 	mc := md2.NewConverter(buf, mco)
 	err := mc.Convert(formData.URL)
 	if err != nil {
+		c.Logger().Error(err)
 		setToastHeader(c, "Error", "Failed to convert Medium post: "+err.Error(), ToastError)
 		return c.String(http.StatusInternalServerError, "Error converting: "+err.Error())
 	}
