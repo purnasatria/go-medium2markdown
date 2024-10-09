@@ -2,6 +2,7 @@ package web
 
 import (
 	"bytes"
+	"embed"
 	"encoding/json"
 	"go-medium2markdown/pkg/md2"
 	"html/template"
@@ -37,7 +38,7 @@ type Question struct {
 	Answer   string `json:"answer"`
 }
 
-func Serve() {
+func Serve(staticFS embed.FS, templateFS embed.FS) {
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
@@ -46,13 +47,13 @@ func Serve() {
 	e := echo.New()
 
 	// Serve static files
-	e.Static("/static", "static")
+	e.StaticFS("/static", echo.MustSubFS(staticFS, "static"))
 
 	// Template
 	t := &Template{
 		templates: template.Must(template.New("").Funcs(template.FuncMap{
 			"formatAnswer": formatAnswer,
-		}).ParseGlob("templates/*.html")),
+		}).ParseFS(templateFS, "templates/*.html")),
 	}
 	e.Renderer = t
 
