@@ -3,7 +3,57 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>MD2: Medium to Markdown Converter</title>
+    <title>MD2: Medium to Markdown Converter | Easy Content Migration</title>
+    <meta
+      name="description"
+      content="Convert your Medium articles to Markdown format easily with MD2. Perfect for content migration, backups, and repurposing your Medium posts."
+    />
+    <link rel="canonical" href="https://md2.blocka.dev" />
+    <meta name="robots" content="index, follow" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://md2.blocka.dev" />
+    <meta property="og:title" content="MD2: Medium to Markdown Converter" />
+    <meta
+      property="og:description"
+      content="Convert Medium articles to Markdown format easily. Perfect for content migration and backups."
+    />
+    <meta
+      property="og:image"
+      content="https://md2.blocka.dev/static/android-chrome-512x512.png"
+    />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://x.com/purnasn" />
+    <meta
+      property="twitter:title"
+      content="MD2: Medium to Markdown Converter"
+    />
+    <meta
+      property="twitter:description"
+      content="Convert Medium articles to Markdown format easily. Perfect for content migration and backups."
+    />
+    <meta
+      property="twitter:image"
+      content="https://md2.blocka.dev/static/android-chrome-512x512.png"
+    />
+
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="static/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="static/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="static/favicon-16x16.png"
+    />
+    <link rel="manifest" href="/site.webmanifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -26,7 +76,7 @@
     ></script>
   </head>
   <body class="font-bitter">
-    <!-- {{template "_navbar"}} -->
+    {{template "_navbar"}}
     <main>
       <section>
         <div class="hero min-h-screen">
@@ -60,7 +110,7 @@
         {{template "_faq" .}}
       </section>
     </main>
-    {{template "_footer"}}
+    {{template "_footer"}} {{template "_toast"}}
     <script>
       htmx.defineExtension("htmx-download", {
         onEvent: function (name, evt) {

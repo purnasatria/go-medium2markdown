@@ -3,11 +3,9 @@ package web
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"go-medium2markdown/pkg/md2"
 	"html/template"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -56,6 +54,29 @@ func Serve() {
 	// Routes
 	e.GET("/", handleIndex)
 	e.POST("/convert", handleConvert)
+	// Serve robots.txt
+	e.GET("/robots.txt", func(c echo.Context) error {
+		robotsTxt := `User-agent: *
+   Allow: /
+
+   Sitemap: https://md2.blocka.dev/sitemap.xml`
+		return c.String(http.StatusOK, robotsTxt)
+	})
+
+	// Serve sitemap.xml
+	e.GET("/sitemap.xml", func(c echo.Context) error {
+		sitemap := `<?xml version="1.0" encoding="UTF-8"?>
+   <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+     <url>
+       <loc>https://md2.blocka.dev/</loc>
+       <lastmod>2024-10-09</lastmod>
+       <changefreq>monthly</changefreq>
+       <priority>1.0</priority>
+     </url>
+   </urlset>`
+		c.Response().Header().Set(echo.HeaderContentType, "application/xml")
+		return c.String(http.StatusOK, sitemap)
+	})
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
@@ -71,7 +92,6 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 func handleIndex(c echo.Context) error {
 	faqData, err := os.ReadFile("./faq.json")
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 
@@ -88,10 +108,9 @@ func handleIndex(c echo.Context) error {
 func handleConvert(c echo.Context) error {
 	var formData FormData
 	if err := c.Bind(&formData); err != nil {
+		setToastHeader(c, "Error", "Can't read form data: "+err.Error(), ToastError)
 		return err
 	}
-
-	log.Print(formData)
 
 	buf := new(bytes.Buffer)
 	mco := md2.Options{
@@ -105,6 +124,7 @@ func handleConvert(c echo.Context) error {
 	mc := md2.NewConverter(buf, mco)
 	err := mc.Convert(formData.URL)
 	if err != nil {
+		setToastHeader(c, "Error", "Failed to convert Medium post: "+err.Error(), ToastError)
 		return c.String(http.StatusInternalServerError, "Error converting: "+err.Error())
 	}
 
@@ -122,6 +142,7 @@ func handleConvert(c echo.Context) error {
 	}
 
 	c.Response().Header().Set("Content-Length", strconv.Itoa(buf.Len()))
+	setToastHeader(c, "Success", "Download will start automatically...", ToastSuccess)
 
 	return c.Blob(http.StatusOK, c.Response().Header().Get("Content-Type"), buf.Bytes())
 }
@@ -131,8 +152,41 @@ func formatAnswer(answer string) template.HTML {
 	safe := template.HTMLEscapeString(answer)
 
 	// Convert newlines to <br> tags
-	safe = strings.Replace(safe, "\n", "<br>", -1)
+	safe = strings.ReplaceAll(safe, "\n", "<br>")
 
 	// Return the safe HTML
 	return template.HTML(safe)
+}
+
+// ToastType represents the type of toast message
+type ToastType string
+
+const (
+	ToastSuccess ToastType = "success"
+	ToastError   ToastType = "error"
+	ToastInfo    ToastType = "info"
+	ToastWarning ToastType = "warning"
+)
+
+// setToastHeader sets the HX-Trigger header for showing a toast message
+func setToastHeader(c echo.Context, title, message string, toastType ToastType) {
+	toast := struct {
+		Title   string    `json:"title"`
+		Message string    `json:"message"`
+		Type    ToastType `json:"type"`
+	}{
+		Title:   title,
+		Message: message,
+		Type:    toastType,
+	}
+
+	toastJSON, err := json.Marshal(map[string]interface{}{
+		"showToast": toast,
+	})
+	if err != nil {
+		// Handle error (in this case, we'll just not set the header)
+		return
+	}
+
+	c.Response().Header().Set("HX-Trigger", string(toastJSON))
 }

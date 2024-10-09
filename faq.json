@@ -22,7 +22,7 @@
         {
           "id": "q5",
           "question": "What is 'Download Assets?'",
-          "answer": "When you check 'Download Asset' you will get archived Medium post with downloaded image in the post in zip format. Please note, if you using Windows File Explorer to open or extract the file, the images will not shown up inside the folder assets. You can try using another 3rd party application like 7-zip."
+          "answer": "When you check 'Download Asset' you will get archived Medium post with downloaded images in zip format. Please note, if you using Windows File Explorer to open or extract the file, the images will not shown up inside the folder assets. You can try using another 3rd party application like 7-zip."
         }
       ]
     },

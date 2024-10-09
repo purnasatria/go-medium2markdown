@@ -6,6 +6,34 @@ html {
   scroll-behavior: smooth !important;
 }
 
+/* handle navbar */
+main {
+  margin-top: 1rem;
+}
+
+/* handle navbar */
+#faq {
+  scroll-margin-top: 5rem;
+}
+
+.toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 4px;
+  background-color: rgba(255, 255, 255, 0.7);
+  animation: progress 5s linear;
+}
+
+@keyframes progress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
 .htmx-indicator {
   display: none;
   visibility: hidden;

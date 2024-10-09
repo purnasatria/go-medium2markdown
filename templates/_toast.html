@@ -1,0 +1,51 @@
+{{define "_toast"}}
+<div id="toast-container"></div>
+<script>
+  document.body.addEventListener("htmx:responseError", function (event) {
+    showToast(event.detail.xhr.getResponseHeader("HX-Trigger"));
+  });
+
+  document.body.addEventListener("htmx:afterOnLoad", function (event) {
+    showToast(event.detail.xhr.getResponseHeader("HX-Trigger"));
+  });
+
+  function showToast(triggerHeader) {
+    if (triggerHeader) {
+      const trigger = JSON.parse(triggerHeader);
+      if (trigger.showToast) {
+        const { title, message, type } = trigger.showToast;
+        const alertClass = type === "error" ? "alert-error" : "alert-success";
+        const toastId = "toast-" + Date.now();
+        const toast = `
+                        <div id="${toastId}" class="toast toast-top toast-center mt-20">
+                            <div class="alert ${alertClass} relative">
+                                <button onclick="closeToast('${toastId}')" class="btn btn-circle btn-xs absolute right-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                                <div class="mr-4">
+                                    <span class="font-bold">${title}</span>
+                                    <span>${message}</span>
+                                </div>
+                                <div class="toast-progress"></div>
+                            </div>
+                        </div>
+                    `;
+        const toastContainer = document.getElementById("toast-container");
+        toastContainer.insertAdjacentHTML("beforeend", toast);
+        setTimeout(() => closeToast(toastId), 5000);
+      }
+    }
+  }
+
+  function closeToast(toastId) {
+    const toast = document.getElementById(toastId);
+    if (toast) {
+      toast.style.opacity = "0";
+      toast.style.transition = "opacity 0.5s ease";
+      setTimeout(() => toast.remove(), 500);
+    }
+  }
+</script>
+{{end}}
