@@ -38,6 +38,11 @@ type Question struct {
 }
 
 func Serve() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
 	e := echo.New()
 
 	// Serve static files
@@ -78,7 +83,8 @@ func Serve() {
 		return c.String(http.StatusOK, sitemap)
 	})
 
-	e.Logger.Fatal(e.Start("0.0.0.0:8080"))
+	e.Logger.Info("listening on", port)
+	e.Logger.Fatal(e.Start(":" + port))
 }
 
 type Template struct {
