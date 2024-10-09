@@ -58,7 +58,7 @@ func Serve(staticFS embed.FS, templateFS embed.FS) {
 	e.Renderer = t
 
 	// Routes
-	e.GET("/", handleIndex)
+	e.GET("/", handleIndex(staticFS))
 	e.POST("/convert", handleConvert)
 	// Serve robots.txt
 	e.GET("/robots.txt", func(c echo.Context) error {
@@ -96,22 +96,25 @@ func (t *Template) Render(w io.Writer, name string, data interface{}, c echo.Con
 	return t.templates.ExecuteTemplate(w, name, data)
 }
 
-func handleIndex(c echo.Context) error {
-	faqData, err := os.ReadFile("./faq.json")
-	if err != nil {
-		c.Logger().Error(err)
-		return err
-	}
+func handleIndex(staticFS embed.FS) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		faqData, err := staticFS.ReadFile("static/faq.json")
+		if err != nil {
+			c.Logger().Error(err)
+			return err
+		}
 
-	var faq FAQ
-	err = json.Unmarshal(faqData, &faq)
-	if err != nil {
-		c.Logger().Error(err)
-		return err
+		var faq FAQ
+		err = json.Unmarshal(faqData, &faq)
+		if err != nil {
+			c.Logger().Error(err)
+			return err
+		}
+
+		return c.Render(http.StatusOK, "index.html", map[string]interface{}{
+			"FAQ": faq,
+		})
 	}
-	return c.Render(http.StatusOK, "index.html", map[string]interface{}{
-		"FAQ": faq,
-	})
 }
 
 func handleConvert(c echo.Context) error {
